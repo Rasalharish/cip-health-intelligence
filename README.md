@@ -2,7 +2,7 @@
 
 **Project Status: Portfolio Ready — Standalone Model 2**
 
-> This project represents the independently developed and validated Model 2 component of a broader industrial CIP intelligence platform. Future work will integrate this diagnostic engine into the main GOOSE CIP Dashboard for real-time operation.
+> This project represents the independently developed and validated Model 2 component of a broader industrial CIP intelligence platform. Future work will integrate this diagnostic engine into the main CIP Dashboard for real-time operation.
 
 ---
 
@@ -94,10 +94,10 @@ This repository includes a standalone, fully-featured Model Test Lab for interac
 * **Manual Testing:** Enter specific process values and instantly view the health calculation.
 * **Historical Trend:** Visualize health and deviation behavior over time.
 
-## 9. Future Integration with GOOSE CIP Dashboard
+## 9. Future Integration with CIP Dashboard
 **Future Integration / Production Roadmap**
 
-This repository is intentionally developed as a **standalone diagnostic module**. In a future production phase, this exact engine will be integrated into the main GOOSE CIP Dashboard to consume real-time CIP observations and provide continuous intelligence.
+This repository is intentionally developed as a **standalone diagnostic module**. In a future production phase, this exact engine will be integrated into the main CIP Dashboard to consume real-time CIP observations and provide continuous intelligence.
 
 ```text
 Industrial Sensors
@@ -106,7 +106,7 @@ Industrial Sensors
 Siemens IIH / OPC UA / MQTT
        |
        v
-GOOSE CIP Dashboard
+CIP Dashboard
        |
        v
 CIP Health Intelligence API
