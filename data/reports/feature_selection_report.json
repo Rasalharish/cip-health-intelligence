@@ -1,0 +1,22 @@
+{
+    "selected_features": [
+        "timestamp",
+        "phe_id",
+        "cip_run_id",
+        "process_step",
+        "segment_id",
+        "step_duration_s",
+        "flow_lph",
+        "temp_in",
+        "sterilization_sp",
+        "temp_error",
+        "conductivity",
+        "steam_pressure",
+        "flow_rolling_mean",
+        "flow_rolling_std",
+        "temp_in_rolling_mean",
+        "cond_rolling_mean",
+        "temp_in_roc"
+    ],
+    "reasoning": "Selected core features matching guidelines: flow, temperature, conductivity, pressure, and engineered features (error, duration, rolling stats, ROC). Avoided operator metadata and duplicate/broken signals."
+}

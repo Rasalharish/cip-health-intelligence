@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+.pytest_cache/
+
+# Data Privacy (Raw/Processed Datasets)
+data/raw/
+data/processed/

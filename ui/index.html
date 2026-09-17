@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIP Health Model Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="top-nav">
+        <div class="logo">MODEL 2: CIP HEALTH & DEVIATION INTELLIGENCE</div>
+        <div class="subtitle">Standalone Process Monitoring Lab</div>
+    </header>
+
+    <main class="container">
+        <!-- Control Panel -->
+        <section class="panel control-panel">
+            <h2>Testing Modes</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dataset')">Dataset Explorer</button>
+                <button class="tab-btn" onclick="switchTab('scenarios')">Synthetic Scenarios</button>
+                <button class="tab-btn" onclick="switchTab('upload')">CSV Batch</button>
+            </div>
+
+            <div id="dataset" class="tab-content active">
+                <div class="data-status" id="data-status">
+                    <h3>Dataset Loading...</h3>
+                </div>
+                
+                <h3 style="margin-top: 1rem;">Observation Selector</h3>
+                <form id="dataset-form">
+                    <div class="form-group">
+                        <label>PHE ID</label>
+                        <select id="sel_phe" onchange="fetchObservations()"><option value="">Any</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>CIP Step</label>
+                        <select id="sel_step" onchange="fetchObservations()"><option value="">Any</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Historical Observation</label>
+                        <select id="sel_obs" onchange="loadObservation()"></select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitObservation()">ANALYZE CIP HEALTH</button>
+                </form>
+
+                <h3 style="margin-top: 2rem;">Batch Mode</h3>
+                <button class="btn btn-warning" onclick="analyzeEntireDataset()">Analyze Entire Dataset</button>
+                
+                <h3 style="margin-top: 2rem;">Historical Health Trend</h3>
+                <canvas id="trendChart" width="400" height="200"></canvas>
+            </div>
+
+            <div id="scenarios" class="tab-content">
+                <p>Run controlled synthetic tests through the Deviation Engine:</p>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="runScenario('normal')">Normal Baseline</button>
+                    <button class="btn btn-warning" onclick="runScenario('high_temp')">High Temperature (+4σ)</button>
+                    <button class="btn btn-warning" onclick="runScenario('low_flow')">Low Flow (-3σ)</button>
+                    <button class="btn btn-danger" onclick="runScenario('combined')">Combined Anomalies</button>
+                </div>
+                <div class="scenario-warning" id="scenario-warning" style="display: none; margin-top: 1rem; color: var(--warning);">
+                    SYNTHETIC TEST SCENARIO
+                </div>
+            </div>
+
+            <div id="upload" class="tab-content">
+                <p>Upload a CSV with raw observations for batch processing.</p>
+                <input type="file" id="csv-file" accept=".csv" />
+                <button class="btn btn-primary" onclick="uploadCsv()" style="margin-top: 10px;">Analyze CSV</button>
+            </div>
+            
+            <div class="info-panels" style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="info-panel" id="quality-panel">
+                    <h3>Dataset Quality</h3>
+                    <ul id="quality-list">Loading...</ul>
+                </div>
+                <div class="info-panel" id="model-info-panel">
+                    <h3>Model 2 Info</h3>
+                    <ul id="model-info-list">Loading...</ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Output -->
+        <section class="panel output-panel">
+            <h2>Health Output</h2>
+            
+            <div class="health-card">
+                <div class="health-score-ring" id="health-ring">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg"
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path class="circle" id="health-circle" stroke-dasharray="0, 100"
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <text x="50%" y="50%" dy=".3em" class="percentage" id="score-text">--</text>
+                    </svg>
+                </div>
+                <div class="health-details" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <h3 id="grade-text" style="margin-bottom: 0.5rem; font-size: 1.5rem;">Grade: -</h3>
+                    <p class="context" id="context-text" style="color: var(--text-muted);">PHE: - | Step: -</p>
+                    <p class="coverage" id="coverage-text" style="color: var(--text-muted);">Coverage: -</p>
+                </div>
+            </div>
+
+            <div class="interpretation-box">
+                <p id="interpretation-text">Run a test to see the engine's explanation.</p>
+            </div>
+
+            <h3>Golden Baseline Comparison</h3>
+            <div class="baseline-table-container">
+                <table id="baseline-table" class="baseline-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Current</th>
+                            <th>Baseline Mean</th>
+                            <th>Deviation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" class="empty-state">No observation selected</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Feature Deviation Chart</h3>
+            <canvas id="deviationChart" width="400" height="200"></canvas>
+            
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
